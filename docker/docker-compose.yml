@@ -27,8 +27,11 @@ version: '3.8'
 
 x-airflow-common:
   &airflow-common
-  # Use official Airflow image with Python 3.10
-  image: apache/airflow:2.8.1-python3.10
+  # Build custom Airflow image with project dependencies
+  build:
+    context: ./..
+    dockerfile: ./docker/Dockerfile
+  image: nepali-corpus-airflow:latest
   
   # Environment variables for Airflow configuration
   environment:
@@ -191,22 +194,11 @@ services:
     command:
       - -c
       - |
-        # Install Python dependencies
-        echo "Installing Python dependencies..."
-        pip install --no-cache-dir --user \
-          requests \
-          beautifulsoup4 \
-          lxml \
-          selenium \
-          pandas \
-          pyarrow \
-          pyyaml \
-          mwparserfromhell
-        
-        # Initialize Airflow database
+        # All dependencies are pre-installed in the Docker image
+        # Just initialize the Airflow database
         echo "Initializing Airflow database..."
         airflow db init
-        
+
         # Create admin user if doesn't exist
         echo "Creating admin user..."
         airflow users create \
@@ -216,7 +208,7 @@ services:
           --role Admin \
           --email admin@example.com \
           --password airflow || true
-        
+
         echo "Initialization complete!"
     environment:
       <<: *airflow-common-env
