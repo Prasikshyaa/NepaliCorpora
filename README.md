@@ -1,10 +1,12 @@
 # Nepali Corpus Project: Complete Documentation
 
 **Author**: Prasikshya Karki  
+**GitHub**: https://github.com/Prasikshyaa  
+**LinkedIn**: https://www.linkedin.com/in/prasikshya-karki-7882863a4/  
 **Project Version**: 2.0.0 (with Language Filtering & Segmentation)  
 **Last Updated**: April 12, 2026  
 **Python Version**: 3.8+  
-**Status**: ✅ Production-Ready with Docker Deployment
+**Status**: Production-Ready with Docker Deployment
 
 ---
 
@@ -57,12 +59,12 @@ python -m scripts.automation.run_preprocessing
 This project implements a **production-grade, fully automated system** for building large-scale **Nepali language corpora** through intelligent web scraping, advanced text processing, and quality assurance pipelines.
 
 **What it does:**
-- ✅ Collects news articles from 9+ Nepali news websites (8+ million articles)
-- ✅ Processes and cleans text data with Unicode normalization
-- ✅ **Filters content to ensure Nepali language dominance (95%+ accuracy)** ⭐ NEW
-- ✅ **Segments text into sentences and paragraphs for NLP** ⭐ NEW
-- ✅ Removes duplicate content (exact + near-duplicate detection)
-- ✅ Exports clean datasets for ML research and applications
+- Collects news articles from 9+ Nepali news websites (8+ million articles)
+- Processes and cleans text data with Unicode normalization
+- **Filters content to ensure Nepali language dominance (95%+ accuracy)** (New)
+- **Segments text into sentences and paragraphs for NLP** (New)
+- Removes duplicate content (exact + near-duplicate detection)
+- Exports clean datasets for ML research and applications
 
 **Deployment Ready:**
 - Fully containerized with Docker
@@ -117,14 +119,14 @@ Raw Scraped Data (9 sites, 8M+ articles)
 └─────────────────────────────────────────┘
                 ↓
 ┌─────────────────────────────────────────┐
-│  STAGE 2: Language Filtering (95%+) ⭐  │
+│  STAGE 2: Language Filtering (95%+)   │
 │  • Devanagari script detection           │
 │  • Nepali word matching                  │
 │  • Confidence scoring (>50%)             │
 └─────────────────────────────────────────┘
                 ↓
 ┌─────────────────────────────────────────┐
-│  STAGE 3: Text Segmentation ⭐          │
+│  STAGE 3: Text Segmentation            │
 │  • Sentence splitting (Nepali punct.)    │
 │  • Paragraph segmentation                │
 │  • Length filtering                      │
@@ -142,7 +144,7 @@ Raw Scraped Data (9 sites, 8M+ articles)
 │  • Remove highly similar content         │
 └─────────────────────────────────────────┘
                 ↓
-✅ Clean, High-Quality Nepali Corpus (Ready for NLP)
+Clean, High-Quality Nepali Corpus (Ready for NLP)
 ```
 
 ### Component Architecture
@@ -154,13 +156,13 @@ Orchestration
 │
 Automation
 ├── run_crawl_scrape.py
-├── run_preprocessing.py ⭐ (NEW: orchestrates clean→filter→segment)
+├── run_preprocessing.py (NEW: orchestrates clean→filter→segment)
 ├── run_deduplication.py
 └── run_wiki_pipeline.py
 │
 Modules
 ├── ingestion/ (URL discovery, HTML scraping)
-├── preprocessing/ ⭐ (clean_text, language_filter, segment_text)
+├── preprocessing/ (clean_text, language_filter, segment_text)
 ├── deduplication/ (exact_dedup, near_dedup)
 └── utils/ (config, logging, paths)
 ```
@@ -189,35 +191,35 @@ Modules
 ```
 Nepali_corpus_Project/
 │
-├── 📋 Configuration
+├── Configuration
 │   ├── configs/
 │   │   ├── websites.yaml          # 9 news sites config
-│   │   ├── preprocessing.yaml     # ⭐ Language filter thresholds
+│   │   ├── preprocessing.yaml     # Language filter thresholds
 │   │   ├── dedup.yaml             # Dedup settings
 │   │   ├── sources.yaml           # Data sources
 │   │   └── wikipedia.yaml         # Wikipedia config
 │   ├── requirements.txt
 │   └── .gitignore
 │
-├── 🐳 Docker & Deployment
+├── Docker & Deployment
 │   ├── docker/
-│   │   ├── Dockerfile            # ⭐ Custom Airflow image with deps
+│   │   ├── Dockerfile            # Custom Airflow image with deps
 │   │   ├── docker-compose.yml    # Full stack (Airflow+PostgreSQL+Redis)
 │   │   ├── .dockerignore
 │   │   ├── airflow-logs/
 │   │   └── airflow-plugins/
 │   └── setup_and_start.sh
 │
-├── 🔄 Orchestration
+├── Orchestration
 │   ├── dags/
 │   │   ├── crawl_scrape_dag.py          # Daily pipeline
 │   │   └── wikipedia_pipeline_dag.py    # Monthly pipeline
 │   └── plugins/
 │
-├── 📚 Processing Scripts
+├── Processing Scripts
 │   ├── scripts/automation/
 │   │   ├── run_crawl_scrape.py
-│   │   ├── run_preprocessing.py          # ⭐ NEW
+│   │   ├── run_preprocessing.py          # NEW
 │   │   ├── run_deduplication.py
 │   │   └── run_wiki_pipeline.py
 │   │
@@ -228,7 +230,7 @@ Nepali_corpus_Project/
 │   │   ├── robots.py
 │   │   └── wikipedia/
 │   │
-│   ├── scripts/preprocessing/           # ⭐ NEW - Full implementation
+│   ├── scripts/preprocessing/           # NEW - Full implementation
 │   │   ├── clean_text.py
 │   │   ├── language_filter.py
 │   │   └── segment_text.py
@@ -688,14 +690,9 @@ Config: configs/preprocessing.yaml
 ## Limitations and Future Work
 
 ### Current Limitations
-- Deduplication requires manual execution
-- Limited support for dynamic JavaScript-heavy websites
-- Manual quality validation steps
 - No real-time monitoring dashboard
 
 ### Planned Enhancements
-- Full pipeline automation including deduplication
-- Advanced JavaScript rendering support
 - Real-time monitoring and alerting
 - Multi-language support expansion
 - Integration with additional data sources
@@ -752,13 +749,13 @@ This project is developed for academic and research purposes in Nepali natural l
 
 ## Contact and Support
 
-For technical issues, feature requests, or collaboration opportunities, please refer to the project documentation or contact the development team.
+For technical issues, feature requests, or collaboration opportunities, please refer to the project documentation or contact prasikshyakarki@gmail.com.
 
 ---
 
 **Contact and Support**
 
-For technical issues, feature requests, or collaboration opportunities, please refer to the project documentation or contact the development team.
+For technical issues, feature requests, or collaboration opportunities, please refer to the project documentation or contact prasikshyakarki@gmail.com.
 4. Logs written to `logs/ingestion/`
 
 ---

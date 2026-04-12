@@ -44,6 +44,8 @@ SCRIPT_TIMEOUT = 7200
 CLEAN_TEXT_MODULE = "scripts.preprocessing.clean_text"
 LANGUAGE_FILTER_MODULE = "scripts.preprocessing.language_filter"
 SEGMENT_TEXT_MODULE = "scripts.preprocessing.segment_text"
+EXACT_DEDUP_MODULE = "scripts.deduplication.exact_dedup"
+NEAR_DEDUP_MODULE = "scripts.deduplication.near_dedup"
 
 LOGGER = get_logger("automation.preprocessing", log_type="automation")
 
@@ -256,6 +258,28 @@ def main():
                 LOGGER.info("⏭️  Text segmentation not implemented yet, skipping...")
         except Exception as e:
             LOGGER.warning(f"Text segmentation check failed: {e}, skipping...")
+
+        # Step 4: Exact Deduplication
+        success = run_python_module(
+            EXACT_DEDUP_MODULE,
+            "Exact Deduplication (remove duplicate documents)",
+            timeout=SCRIPT_TIMEOUT
+        )
+
+        if not success and interrupt_count == 0:
+            LOGGER.error("❌ Exact deduplication failed. Stopping pipeline.")
+            return 1
+
+        # Step 5: Near Deduplication
+        success = run_python_module(
+            NEAR_DEDUP_MODULE,
+            "Near Deduplication (remove similar documents)",
+            timeout=SCRIPT_TIMEOUT
+        )
+
+        if not success and interrupt_count == 0:
+            LOGGER.error("❌ Near deduplication failed. Stopping pipeline.")
+            return 1
 
         # Pipeline completed
         duration = datetime.now() - start_time
