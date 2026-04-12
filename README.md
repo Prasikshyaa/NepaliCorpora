@@ -270,7 +270,7 @@ python scripts/deduplication/near_dedup.py
 # Start Airflow environment
 docker-compose up -d
 
-# Access Airflow UI at http://localhost:8080
+# Access Airflow UI at http://localhost:8081
 # Enable and trigger DAGs for automated execution
 ```
 
