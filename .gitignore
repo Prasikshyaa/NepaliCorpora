@@ -1,0 +1,86 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Data (comment out if you want to track sample data)
+data/raw/
+data/processed/
+data/crawl_state/
+data/scrape_state/
+!data/.gitkeep
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Airflow
+airflow-logs/
+
+# Docker
+docker/airflow-logs/
+
+# Kaggle
+.kaggle/
+
+# SQLite databases (uncomment if you want to track schema only)
+*.sqlite
+*.sqlite-*
+!data/crawl_state/.gitkeep
+
+# Secrets
+.env
+.env.local
+secrets/
+
+# Node modules (if any)
+node_modules/

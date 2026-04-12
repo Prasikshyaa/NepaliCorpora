@@ -1,0 +1,19 @@
+# -----------------------------
+# Deduplication levels
+# -----------------------------
+document_level: true
+paragraph_level: true
+sentence_level: true
+
+# -----------------------------
+# Hash / similarity method
+# -----------------------------
+exact_hash: md5           # for exact duplicates
+near_duplicate: true
+similarity_threshold: 0.9 # for fuzzy deduplication
+
+# -----------------------------
+# Behavior
+# -----------------------------
+incremental: true          # deduplicate new data against existing corpus
+store_signatures: true    # keep hash/signature for future incremental runs

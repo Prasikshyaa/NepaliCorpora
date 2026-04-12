@@ -1,0 +1,25 @@
+# -----------------------------
+# General cleaning
+# -----------------------------
+remove_html: true
+remove_urls: true
+remove_emails: true
+remove_non_nepali: true  # Remove text not in Devanagari
+
+# -----------------------------
+# Length filtering
+# -----------------------------
+min_document_length: 20   # minimum characters per document
+min_sentence_length: 5    # minimum words per sentence
+
+# -----------------------------
+# Unicode / normalization
+# -----------------------------
+normalize_unicode: true
+strip_whitespace: true
+
+# -----------------------------
+# Segmentation rules
+# -----------------------------
+sentence_split: true
+paragraph_split: true

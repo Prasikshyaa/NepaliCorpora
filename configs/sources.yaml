@@ -1,0 +1,88 @@
+# -----------------------------
+# Hugging Face / Ready-made datasets
+# -----------------------------
+huggingface_datasets:
+  # - name: mridul3301/nepali-text-corpus-64
+  #   text_column: Article
+    
+  # - name: IRIIS-RESEARCH/Nepali-Text-Corpus
+  #   text_column: Article
+  # - name: raygx/Nepali-Text-Corpus
+  #   text_column: text
+  # - name: paudelnirajan/nepali-corpus-v1
+  #   text_column: text
+  # - name: Sakonii/nepalitext-language-model-dataset
+  #   text_column: text
+
+  
+
+
+# # -----------------------------
+# # Kaggle datasets 
+# # -----------------------------
+kaggle_datasets:
+  # - name: sparshrestha/nepali-sentences-corpus
+  #   file: correct_sentences.txt
+  #   format: text
+
+  # - name: sailentkillerr/nepali-gec-and-cleaned-sentences
+  #   file: nepali_clean_sentences_100k.txt
+  #   format: text
+
+  # - name: dhakal2444/nepali-news-dataset
+  #   file: Nepali_News_dataset.csv
+  #   text_column: text
+  #   format: csv
+
+  # - name: disisbig/nepali-wikipedia-articles
+  #   directory: train
+  #   format: text
+
+  # - name: tejshahi/20nepalinews
+  #   file: nepali_news_dataset_20_categories_small.tar.xz
+  #   format: archive_txt
+
+  # - name: ashokpant/nepali-news-dataset-large
+  #   directory: nepali_news_dataset_20_categories_large
+  #   exclude_files: ["README.md"]
+  #   format: text
+
+  # - name: lotusacharya/nepalinewsdataset
+  #   directory:
+  #     - ArthaBanijya
+  #     - Bichar
+  #     - Desh
+  #     - Khelkud
+  #     - Manoranjan
+  #     - Prabas
+  #     - Sahitya
+  #     - SuchanaPrabidhi
+  #     - Swasthya
+  #     - Viswa
+  #   format: text
+
+# - name: sunilregmi233/nepali-corpus
+#   file: data_train.txt
+#   format: text
+
+# - name: sunilregmi233/nepali-corpus
+#   file: data_test.txt
+#   format: text
+
+
+  # - name: hsebarp/oscar-corpus-nepali
+  #   file: ne_dedup.txt
+  #   format: text
+
+# - name: thedevastator/nepali-health-q-a-corpus
+#   file: train.csv     
+#   text_column: Translated_Response
+
+  # - name: kumardahal/nepali-nd-english-mix-corpus
+  #   file: eng_news_wikipedia_ncc_corpus.txt
+  #   format: text
+
+  # - name: rajanghimire/nepali-raw-text-data-batch2
+  #   directory: all
+  #   format: text
+

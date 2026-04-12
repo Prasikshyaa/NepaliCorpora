@@ -1,0 +1,151 @@
+# configs/wikipedia.yaml
+# Production-grade configuration for Nepali Wikipedia dump processing
+# Last updated: 2026-01-29
+
+# ============================================================================
+# PATHS (relative to project root)
+# ============================================================================
+paths:
+  # Input: Where Wikipedia dumps are stored
+  raw_dump_dir: "wikipedia/latest"
+  dump_filename: "newiki-latest-pages-articles.xml.bz2"
+  
+  # Output: Where processed text is saved
+  processed_dir: "wikipedia"
+  
+  # Logs
+  logs_dir: "wikipedia"
+  
+  # Temporary extraction directory
+  temp_dir: "wikipedia"
+
+# ============================================================================
+# WIKIPEDIA DUMP DOWNLOAD
+# ============================================================================
+download:
+  # Nepali Wikipedia (newiki) dump URL
+  base_url: "https://dumps.wikimedia.org/newiki/latest/"
+  dump_file: "newiki-latest-pages-articles.xml.bz2"
+  
+  # Overwrite existing dump (recommended for monthly updates)
+  overwrite_existing: true
+  
+  # Verify download integrity (optional, slower)
+  verify_checksum: false
+
+# ============================================================================
+# EXTRACTION SETTINGS
+# ============================================================================
+extraction:
+  # Memory-efficient streaming (process N articles before writing)
+  stream_chunk_size: 1000
+  overwrite_existing: true
+  
+  # Article filtering
+  min_article_length: 100        # Minimum characters (filters stubs)
+  skip_redirects: true            # Skip redirect pages
+  skip_disambiguation: true       # Skip disambiguation pages
+  
+  # Namespaces to include
+  # 0 = Main/Article namespace (encyclopedic content)
+  # Other namespaces: 1=Talk, 2=User, 4=Wikipedia, 6=File, etc.
+  allowed_namespaces:
+    - 0
+  
+  # Testing mode: limit number of articles
+  # Set to 0 for production (process all articles)
+  # Set to 100-1000 for testing
+  max_articles: 0
+
+# ============================================================================
+# TEXT CLEANING
+# ============================================================================
+cleaning:
+  # Remove Wikipedia-specific markup
+  remove_templates: true          # Remove {{templates}}, {{infoboxes}}
+  remove_infoboxes: true          # Remove infoboxes specifically
+  remove_tables: true             # Remove tables
+  remove_references: true         # Remove <ref> citations
+  remove_external_links: true     # Remove external URLs
+  remove_categories: true         # Remove [[Category:...]]
+  remove_images: true             # Remove [[File:...]], [[Image:...]]
+  
+  # Text normalization
+  normalize_unicode: true         # NFC normalization for Devanagari
+  normalize_whitespace: true      # Multiple spaces → single space
+  normalize_punctuation: false    # Keep Nepali punctuation as-is
+  
+  # Paragraph processing
+  min_paragraph_length: 20        # Minimum characters per paragraph
+  max_paragraph_length: 10000     # Maximum (filter very long paragraphs)
+  
+  # Language validation (Nepali/Devanagari script)
+  require_devanagari: true        # Must contain Devanagari characters
+  min_devanagari_ratio: 0.3       # At least 30% Devanagari (filters mixed content)
+
+# ============================================================================
+# OUTPUT FORMAT
+# ============================================================================
+output:
+  format: "parquet"
+  batch_size: 5000
+  
+  # Include article metadata
+  save_metadata: true
+  metadata_fields:
+    - title          # Article title
+    - page_id        # Wikipedia page ID
+    - timestamp      # Last revision timestamp
+    # Note: revision_id removed (not available in current extractor)
+
+# ============================================================================
+# LOGGING
+# ============================================================================
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: "INFO"
+  
+  # Log destinations
+  log_to_file: true               # Save logs to data/logs/wikipedia/
+  log_to_console: true            # Print to stdout (Airflow-friendly)
+  
+  # Progress reporting interval
+  # Log every N articles processed
+  # Recommended: 1000 for production, 100 for testing
+  progress_interval: 1000
+
+# ============================================================================
+# PERFORMANCE
+# ============================================================================
+performance:
+  # Multiprocessing for text cleaning (experimental)
+  # Currently not implemented - keep false
+  use_multiprocessing: false
+  num_workers: 4
+  
+  # Memory management
+  # Maximum memory usage target (informational)
+  max_memory_mb: 2048
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# Nepali Wikipedia Stats (as of 2024):
+#   - Total articles: ~150,000+
+#   - Dump size: ~500 MB (compressed), ~2 GB (uncompressed)
+#   - Processing time: ~10-30 minutes (depends on hardware)
+#   - Output size: ~300-500 MB (after cleaning)
+#
+# Update frequency:
+#   - Wikimedia creates new dumps daily
+#   - Recommend downloading monthly for corpus updates
+#
+# For testing:
+#   - Set extraction.max_articles to 100-1000
+#   - Set output.batch_size to 50-100
+#   - Set logging.progress_interval to 10
+#
+# For production:
+#   - Set extraction.max_articles to 0 (unlimited)
+#   - Set output.batch_size to 5000+
+#   - Set logging.progress_interval to 1000

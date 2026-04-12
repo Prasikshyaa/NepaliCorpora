@@ -1,0 +1,387 @@
+# config/websites.yaml
+# Production-grade Nepali news website configuration
+# YAML defines WHAT to crawl, crawler defines HOW
+
+sites:
+
+  # ============================================================================
+  # 1. ONLINE KHABAR
+  # ============================================================================
+  onlinekhabar:
+    base_url: https://www.onlinekhabar.com
+    start_urls:
+      - https://www.onlinekhabar.com/
+      - https://www.onlinekhabar.com/content/news
+      - https://www.onlinekhabar.com/content/news/rastiya
+      - https://www.onlinekhabar.com/business
+      - https://www.onlinekhabar.com/markets
+      - https://www.onlinekhabar.com/health/
+      - https://www.onlinekhabar.com/lifestyle/
+      - https://www.onlinekhabar.com/content/technology-news
+      - https://www.onlinekhabar.com/entertainment
+      - https://www.onlinekhabar.com/sports
+      - https://www.onlinekhabar.com/opinion
+      - https://www.onlinekhabar.com/rashifal
+
+    allowed_domains:
+      - onlinekhabar.com
+      - www.onlinekhabar.com
+      - calendar.onlinekhabar.com
+
+    article_patterns:
+      - "/\\d{4}/\\d{2}/\\d{7}/"
+      - "/\\d{4}/\\d{2}/\\d{6}/"
+      - "/news/\\d+"
+
+    exclude_patterns:
+      - "/author/"
+      - "/tag/"
+      - "/search"
+      - "/login"
+      - "/register"
+      - "/epaper"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 6
+    rate_limit_seconds: 2
+    respect_robots_txt: false
+
+
+  # ============================================================================
+  # 2. EKANTIPUR
+  # ============================================================================
+  ekantipur:
+    base_url: https://ekantipur.com
+    start_urls:
+      - https://ekantipur.com/politics
+      - https://ekantipur.com/business
+      - https://ekantipur.com/opinion
+      - https://ekantipur.com/sports
+      - https://ekantipur.com/entertainment
+      - https://ekantipur.com/national
+      - https://ekantipur.com/photo_feature
+      - https://ekantipur.com/feature
+      - https://ekantipur.com/world
+      - https://ekantipur.com/blog
+      - https://ekantipur.com/koseli
+      - https://ekantipur.com/diaspora
+      - https://ekantipur.com/Education
+      - https://ekantipur.com/health
+      - https://ekantipur.com/Interview
+      - https://ekantipur.com/lifestyle
+      - https://ekantipur.com/literature
+      - https://ekantipur.com/technology
+      - https://ekantipur.com/video
+      - https://ekantipur.com/news
+      - https://ekantipur.com/bibidha
+      - https://ekantipur.com/market
+      - https://ekantipur.com/Ghar-Kharcha
+
+    allowed_domains:
+      - ekantipur.com
+      - www.ekantipur.com
+
+    article_patterns:
+      - "/\\d{4}/\\d{2}/\\d{2}/"
+      - "/news-\\d+\\.html"
+      - "/\\d{10,}"
+
+    exclude_patterns:
+      - "/author/"
+      - "/tag/"
+      - "/archives/"
+      - "/epaper"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"  
+    requires_javascript: false
+    max_depth: 6
+    rate_limit_seconds: 2
+    respect_robots_txt: false
+
+
+  # ============================================================================
+  # 3. SETOPATI
+  # ============================================================================
+  setopati:
+    base_url: https://www.setopati.com
+    start_urls:
+      - https://www.setopati.com/
+      - https://www.setopati.com/cover-story
+      - https://www.setopati.com/politics
+      - https://www.setopati.com/kinmel
+      - https://www.setopati.com/nepali-brand
+      - https://www.setopati.com/opinion
+      - https://www.setopati.com/social
+      - https://www.setopati.com/art
+      - https://www.setopati.com/blog
+      - https://www.setopati.com/sports
+      - https://www.setopati.com/global
+      - https://www.setopati.com/exclusive
+
+    allowed_domains:
+      - www.setopati.com
+
+    article_patterns:
+      - "/[a-z-]+/\\d+"
+
+    exclude_patterns:
+      - "/author/"
+      - "/tag/"
+      - "/search"
+      - "#"
+    
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 6
+    rate_limit_seconds: 2
+    respect_robots_txt: true
+
+  # # ============================================================================
+  # # 4. NAGARIK NEWS
+  # # ============================================================================
+  # nagariknews:
+  #   base_url: https://nagariknews.nagariknetwork.com
+  #   start_urls:
+  #     - https://nagariknews.nagariknetwork.com/main-news
+  #     - https://nagariknews.nagariknetwork.com/politics
+  #     - https://nagariknews.nagariknetwork.com/social-affairs
+  #     - https://nagariknews.nagariknetwork.com/economy
+  #     - https://nagariknews.nagariknetwork.com/sports
+  #     - https://nagariknews.nagariknetwork.com/opinion
+  #     - https://nagariknews.nagariknetwork.com/international
+  #     - https://nagariknews.nagariknetwork.com/health
+  #     - https://nagariknews.nagariknetwork.com/technology
+  #     - https://nagariknews.nagariknetwork.com/education
+  #     - https://nagariknews.nagariknetwork.com/diaspora
+  #     - https://nagariknews.nagariknetwork.com/blog
+
+  #   allowed_domains:
+  #     - nagariknews.nagariknetwork.com
+
+  #   article_patterns:
+  #     - "/news/\\d+"
+  #     - "/\\d{4}/\\d{2}/\\d{2}/"
+
+  #   exclude_patterns:
+  #     - "/author/"
+  #     - "/tag/"
+  #     - "/epapers"
+  #     - "#"
+
+
+  #   user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+  #   requires_javascript: true
+  #   max_depth: 6
+  #   rate_limit_seconds: 3
+  #   respect_robots_txt: true
+
+
+  # ============================================================================
+  # 5. RATOPATI
+  # ============================================================================
+  ratopati:
+    base_url: https://www.ratopati.com
+    start_urls:
+      - https://www.ratopati.com/category/news
+      - https://www.ratopati.com/economy
+      - https://www.ratopati.com/opinion
+      - https://www.ratopati.com/health
+      - https://www.ratopati.com/entertainment
+      - https://www.ratopati.com/sports
+      - https://www.ratopati.com/video
+      - https://www.ratopati.com/category/international
+
+    allowed_domains:
+      - ratopati.com
+      - www.ratopati.com
+      - bagmati.ratopati.com
+      - koshi.ratopati.com
+      - madhesh.ratopati.com
+      - gandaki.ratopati.com
+      - lumbini.ratopati.com
+      - karnali.ratopati.com
+      - sudurpashchim.ratopati.com
+
+    article_patterns:
+      - "/story/\\d+"
+      - "/\\d{4}/\\d{2}/\\d{2}/"
+
+    exclude_patterns:
+      - "/author/"
+      - "/tag/"
+      - "/downloads"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 6
+    rate_limit_seconds: 2
+    respect_robots_txt: false
+
+
+  # ============================================================================
+  # 6. UJYAALO ONLINE
+  # ============================================================================
+  ujyaaloonline:
+    base_url: https://ujyaaloonline.com
+    start_urls:
+      - https://ujyaaloonline.com/
+      - https://ujyaaloonline.com/category/special
+      - https://ujyaaloonline.com/category/opinion
+      - https://ujyaaloonline.com/category/politics
+      - https://ujyaaloonline.com/category/social
+      - https://ujyaaloonline.com/category/sport
+      - https://ujyaaloonline.com/category/economy
+      - https://ujyaaloonline.com/category/world
+
+    allowed_domains:
+      - ujyaaloonline.com
+
+    article_patterns:
+      - "/story/\\d+"
+
+    exclude_patterns:
+      - "/ujyaalo-radio"
+      - "/author/"
+      - "/tag/"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 6
+    rate_limit_seconds: 2
+    respect_robots_txt: true
+
+
+  # ============================================================================
+  # 7. HIMAL KHABAR
+  # ============================================================================
+  himalkhabar:
+    base_url: https://www.himalkhabar.com
+    start_urls:
+      - https://www.himalkhabar.com/
+      - https://www.himalkhabar.com/special
+
+    allowed_domains:
+      - himalkhabar.com
+
+    article_patterns:
+      - "/news/\\d+"
+      - "/\\d{4}/\\d{2}/\\d{2}/"
+
+    exclude_patterns:
+      - "/page/about-us"
+      - "/page/niti-tatha-mapdanda"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 5
+    rate_limit_seconds: 2
+    respect_robots_txt: false
+
+
+  # ============================================================================
+  # 8. GORKHAPATRA ONLINE
+  # ============================================================================
+  gorkhapatraonline:
+    base_url: https://gorkhapatraonline.com
+    start_urls:
+      - https://gorkhapatraonline.com/
+      - https://gorkhapatraonline.com/categories/national
+      - https://gorkhapatraonline.com/categories/economy
+      - https://gorkhapatraonline.com/categories/politics
+      - https://gorkhapatraonline.com/categories/sports
+      - https://gorkhapatraonline.com/categories/entertainment
+      - https://gorkhapatraonline.com/categories/international
+
+    allowed_domains:
+      - gorkhapatraonline.com
+      - www.gorkhapatraonline.com
+
+    article_patterns:
+      - "/\\d{4}/\\d{2}/\\d{2}/"
+      - "/news/\\d+"
+
+    exclude_patterns:
+      - "/epaper"
+      - "/news-search"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 6
+    rate_limit_seconds: 2
+    respect_robots_txt: false
+
+
+  # ============================================================================
+  # 9. BBC NEPALI
+  # ============================================================================
+  bbc_nepali:
+    base_url: https://www.bbc.com/nepali
+    start_urls:
+      - https://www.bbc.com/nepali
+      - https://www.bbc.com/nepali/topics/c5ydk8xvx6jt
+      - https://www.bbc.com/nepali/topics/cyx5k2yzyj6t
+      - https://www.bbc.com/nepali/topics/cy5nkr41gx6t
+      - https://www.bbc.com/nepali/topics/c2dwqjg83q0t
+      - https://www.bbc.com/nepali/topics/c9de5jl3967t
+
+    allowed_domains:
+      - www.bbc.com/nepali
+
+
+    article_patterns:
+      - "/nepali/articles/"
+
+    exclude_patterns:
+      - "/topics/"
+      - "/av/"
+      - "/programmes/"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: true
+    max_depth: 4
+    rate_limit_seconds: 3
+    respect_robots_txt: true
+
+  # ============================================================================
+  # 10. NEPAL PRESS
+  # ============================================================================
+  nepalpress:
+    base_url: https://nepalpress.com
+    start_urls:
+      - https://nepalpress.com/
+      - https://nepalpress.com/category/news/
+      - https://nepalpress.com/category/political/
+      - https://nepalpress.com/category/opinion/
+      - https://nepalpress.com/category/business/
+      - https://nepalpress.com/category/sports/
+      - https://nepalpress.com/category/technology/
+      - https://nepalpress.com/category/international/
+
+    allowed_domains:
+      - nepalpress.com
+      - www.nepalpress.com
+      - election.nepalpress.com
+
+    article_patterns:
+      - "/\\d{4}/\\d{2}/\\d{2}/"
+
+    exclude_patterns:
+      - "/author/"
+      - "/tag/"
+      - "#"
+
+    user_agent: "NepaliCorpusBot/1.0 (Nepali NLP Research; prasikshyakarki@gmail.com)"
+    requires_javascript: false
+    max_depth: 7   # very deep pagination
+    rate_limit_seconds: 2
+    respect_robots_txt: true
+# End of config/websites.yaml

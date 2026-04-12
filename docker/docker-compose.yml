@@ -1,0 +1,246 @@
+# Docker Compose for Airflow + Nepali Corpus Pipeline
+# 
+# This setup runs Apache Airflow with all components needed for automated
+# data collection from Nepali news sites and Wikipedia.
+#
+# Components:
+# - PostgreSQL: Airflow metadata database
+# - Redis: Message broker for Celery (future scaling)
+# - Airflow Webserver: Web UI (port 8080)
+# - Airflow Scheduler: DAG scheduler
+# - Airflow Init: One-time initialization
+#
+# Usage:
+#   docker-compose up -d          # Start all services
+#   docker-compose down           # Stop all services
+#   docker-compose logs -f        # View logs
+#   docker-compose ps             # Check status
+#
+# Access Airflow UI: http://localhost:8080
+# Default credentials: airflow / airflow (change in production!)
+
+version: '3.8'
+
+# ============================================================================
+# SHARED CONFIGURATION
+# ============================================================================
+
+x-airflow-common:
+  &airflow-common
+  # Use official Airflow image with Python 3.10
+  image: apache/airflow:2.8.1-python3.10
+  
+  # Environment variables for Airflow configuration
+  environment:
+    &airflow-common-env
+    # Core Airflow settings
+    AIRFLOW__CORE__EXECUTOR: LocalExecutor
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+    AIRFLOW__CORE__FERNET_KEY: ''
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    
+    # API settings
+    AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
+    
+    # Webserver settings
+    AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
+    AIRFLOW__WEBSERVER__RBAC: 'true'
+    
+    # Logging
+    AIRFLOW__LOGGING__LOGGING_LEVEL: INFO
+    AIRFLOW__LOGGING__FAB_LOGGING_LEVEL: WARNING
+    
+    # Celery (for future scaling)
+    AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres/airflow
+    AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
+    
+    # Custom settings for our pipeline
+    PYTHONPATH: /opt/airflow
+    TZ: Asia/Kathmandu
+  
+  # Mount volumes
+  volumes:
+    # Project root (scripts, configs, data)
+    - ./..:/opt/airflow
+    
+    # Airflow DAGs
+    - ./../dags:/opt/airflow/dags
+    
+    # Airflow logs (separate from our app logs)
+    - ./airflow-logs:/opt/airflow/logs
+    
+    # Airflow plugins (if needed)
+    - ./airflow-plugins:/opt/airflow/plugins
+    
+    # Data persistence (crawled URLs, articles, etc.)
+    - ./../data:/opt/airflow/data
+    
+    # Application logs
+    - ./../logs:/opt/airflow/logs/app
+  
+  # User (run as airflow user inside container)
+  user: "${AIRFLOW_UID:-50000}:0"
+  
+  # Dependency on postgres
+  depends_on:
+    postgres:
+      condition: service_healthy
+    redis:
+      condition: service_healthy
+
+# ============================================================================
+# SERVICES
+# ============================================================================
+
+services:
+  
+  # --------------------------------------------------------------------------
+  # PostgreSQL Database (Airflow metadata)
+  # --------------------------------------------------------------------------
+  postgres:
+    image: postgres:14
+    container_name: nepali_corpus_postgres
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      # Persist database data
+      - postgres-db-volume:/var/lib/postgresql/data
+    ports:
+      # Expose for debugging (optional, comment out in production)
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+    restart: always
+    networks:
+      - airflow-network
+  
+  # --------------------------------------------------------------------------
+  # Redis (Message broker for Celery)
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: nepali_corpus_redis
+    ports:
+      # Expose for debugging (optional)
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 50
+      start_period: 30s
+    restart: always
+    networks:
+      - airflow-network
+  
+  # --------------------------------------------------------------------------
+  # Airflow Webserver (UI)
+  # --------------------------------------------------------------------------
+  airflow-webserver:
+    <<: *airflow-common
+    container_name: nepali_corpus_airflow_webserver
+    command: webserver
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+    networks:
+      - airflow-network
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+  
+  # --------------------------------------------------------------------------
+  # Airflow Scheduler (DAG execution)
+  # --------------------------------------------------------------------------
+  airflow-scheduler:
+    <<: *airflow-common
+    container_name: nepali_corpus_airflow_scheduler
+    command: scheduler
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8974/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    restart: always
+    networks:
+      - airflow-network
+    depends_on:
+      airflow-init:
+        condition: service_completed_successfully
+  
+  # --------------------------------------------------------------------------
+  # Airflow Initialization (one-time setup)
+  # --------------------------------------------------------------------------
+  airflow-init:
+    <<: *airflow-common
+    container_name: nepali_corpus_airflow_init
+    entrypoint: /bin/bash
+    command:
+      - -c
+      - |
+        # Install Python dependencies
+        echo "Installing Python dependencies..."
+        pip install --no-cache-dir --user \
+          requests \
+          beautifulsoup4 \
+          lxml \
+          selenium \
+          pandas \
+          pyarrow \
+          pyyaml \
+          mwparserfromhell
+        
+        # Initialize Airflow database
+        echo "Initializing Airflow database..."
+        airflow db init
+        
+        # Create admin user if doesn't exist
+        echo "Creating admin user..."
+        airflow users create \
+          --username airflow \
+          --firstname Airflow \
+          --lastname Admin \
+          --role Admin \
+          --email admin@example.com \
+          --password airflow || true
+        
+        echo "Initialization complete!"
+    environment:
+      <<: *airflow-common-env
+      _AIRFLOW_DB_UPGRADE: 'true'
+      _AIRFLOW_WWW_USER_CREATE: 'true'
+      _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
+      _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+    networks:
+      - airflow-network
+    user: "0:0"  # Run as root for initialization
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+
+volumes:
+  # PostgreSQL data persistence
+  postgres-db-volume:
+    driver: local
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+
+networks:
+  airflow-network:
+    driver: bridge
