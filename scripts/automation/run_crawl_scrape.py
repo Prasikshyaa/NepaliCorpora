@@ -242,15 +242,23 @@ def run_module(module_name: str, script_name: str, timeout: int = SCRIPT_TIMEOUT
 # MAIN PIPELINE
 # ============================================================================
 
-def run_crawl_scrape_pipeline() -> int:
+# ============================================================================
+# MAIN PIPELINE
+# ============================================================================
+
+def run_crawl_scrape_pipeline(mode: str = "both") -> int:
     """
-    Run the complete crawl → scrape pipeline.
-    
+    Run the crawl → scrape pipeline with selectable modes.
+
+    Args:
+        mode: "crawl", "scrape", or "both"
+
     Returns:
         Exit code (0=success, 1=failure)
     """
     LOGGER.info("="*80)
     LOGGER.info("CRAWL & SCRAPE AUTOMATION PIPELINE")
+    LOGGER.info(f"Mode: {mode}")
     LOGGER.info(f"Started at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     LOGGER.info(f"Platform: {platform.system()} {platform.release()}")
     LOGGER.info(f"Python: {sys.version}")
@@ -260,68 +268,73 @@ def run_crawl_scrape_pipeline() -> int:
     LOGGER.info("  • Press Ctrl+C ONCE to skip current step")
     LOGGER.info("  • Press Ctrl+C TWICE (within 3s) to exit completely")
     LOGGER.info("="*80)
-    
+
     pipeline_start = time.time()
     steps_completed = []
     steps_skipped = []
     steps_failed = []
-    
-    # Step 1: Crawl all sites
-    LOGGER.info("\n[STEP 1/2] Running web crawler...")
-    LOGGER.info("This step discovers article URLs from configured news sites")
-    
-    crawl_success, crawl_skipped = run_module(WEBCRAWLER_MODULE, "Web Crawler")
-    
-    if crawl_skipped:
-        LOGGER.warning("\n⊘ Crawling skipped - continuing to scraping")
-        LOGGER.warning("Note: Scraper will use existing URLs from previous crawl")
-        steps_skipped.append("Web Crawler")
-    elif not crawl_success:
-        LOGGER.error("\n✗ Crawling failed - aborting pipeline")
-        LOGGER.error("The scraper will not run because crawler failed")
-        steps_failed.append("Web Crawler")
-        return 1
-    else:
-        LOGGER.info("\n✓ Crawling completed successfully")
-        LOGGER.info("Discovered URLs are ready for scraping")
-        steps_completed.append("Web Crawler")
-    
-    # Step 2: Scrape discovered articles
-    LOGGER.info("\n[STEP 2/2] Running web scraper...")
-    LOGGER.info("This step extracts article content from discovered URLs")
-    
-    scrape_success, scrape_skipped = run_module(WEBSCRAPER_MODULE, "Web Scraper")
-    
-    if scrape_skipped:
-        LOGGER.warning("\n⊘ Scraping skipped - pipeline incomplete")
-        steps_skipped.append("Web Scraper")
-    elif not scrape_success:
-        LOGGER.error("\n✗ Scraping failed - pipeline incomplete")
-        LOGGER.error("Some or all articles may not have been scraped successfully")
-        steps_failed.append("Web Scraper")
-        return 1
-    else:
-        LOGGER.info("\n✓ Scraping completed successfully")
-        steps_completed.append("Web Scraper")
-    
+
+    # Determine which steps to run
+    run_crawl = mode in ["both", "crawl"]
+    run_scrape = mode in ["both", "scrape"]
+
+    # Step 1: Crawl all sites (if requested)
+    if run_crawl:
+        LOGGER.info("\n[STEP 1] Running web crawler...")
+        LOGGER.info("This step discovers article URLs from configured news sites")
+
+        crawl_success, crawl_skipped = run_module(WEBCRAWLER_MODULE, "Web Crawler")
+
+        if crawl_skipped:
+            LOGGER.warning("\n⊘ Crawling skipped - continuing to next steps")
+            steps_skipped.append("Web Crawler")
+        elif not crawl_success:
+            LOGGER.error("\n✗ Crawling failed - aborting pipeline")
+            steps_failed.append("Web Crawler")
+            return 1
+        else:
+            LOGGER.info("\n✓ Crawling completed successfully")
+            steps_completed.append("Web Crawler")
+
+    # Step 2: Scrape discovered articles (if requested)
+    if run_scrape:
+        step_num = 2 if run_crawl else 1
+        total_steps = (1 if run_crawl else 0) + (1 if run_scrape else 0)
+
+        LOGGER.info(f"\n[STEP {step_num}/{total_steps}] Running web scraper...")
+        LOGGER.info("This step extracts article content from discovered URLs")
+
+        scrape_success, scrape_skipped = run_module(WEBSCRAPER_MODULE, "Web Scraper")
+
+        if scrape_skipped:
+            LOGGER.warning("\n⊘ Scraping skipped - pipeline incomplete")
+            steps_skipped.append("Web Scraper")
+        elif not scrape_success:
+            LOGGER.error("\n✗ Scraping failed - pipeline incomplete")
+            steps_failed.append("Web Scraper")
+            return 1
+        else:
+            LOGGER.info("\n✓ Scraping completed successfully")
+            steps_completed.append("Web Scraper")
+
     # Summary
     pipeline_elapsed = time.time() - pipeline_start
-    
+
     LOGGER.info("\n" + "="*80)
     LOGGER.info("PIPELINE SUMMARY")
     LOGGER.info("="*80)
-    
+
     if steps_completed:
         LOGGER.info(f"✓ Completed: {', '.join(steps_completed)}")
     if steps_skipped:
         LOGGER.warning(f"⊘ Skipped:   {', '.join(steps_skipped)}")
     if steps_failed:
         LOGGER.error(f"✗ Failed:    {', '.join(steps_failed)}")
-    
+
     LOGGER.info("")
     LOGGER.info(f"Total time: {pipeline_elapsed/60:.1f} minutes ({pipeline_elapsed:.1f}s)")
     LOGGER.info(f"Finished at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
+
     # Determine exit code
     if steps_failed:
         LOGGER.error("\nPIPELINE FAILED ✗")
@@ -334,7 +347,7 @@ def run_crawl_scrape_pipeline() -> int:
     elif steps_skipped:
         LOGGER.warning("\nPIPELINE PARTIALLY COMPLETE ⊘")
         LOGGER.info("="*80)
-        return 0  # Partial success - you can change this to 1 if you want
+        return 0  # Partial success
     else:
         LOGGER.info("\nPIPELINE COMPLETE ✓")
         LOGGER.info("="*80)
@@ -346,41 +359,53 @@ def run_crawl_scrape_pipeline() -> int:
 
 def main():
     """Main entry point with comprehensive error handling."""
-    
+
+    # Parse command line arguments
+    import argparse
+    parser = argparse.ArgumentParser(description="Nepali Corpus Crawl & Scrape Automation")
+    parser.add_argument(
+        'mode',
+        nargs='?',
+        default='both',
+        choices=['crawl', 'scrape', 'both'],
+        help='Pipeline mode: crawl, scrape, or both (default: both)'
+    )
+    args = parser.parse_args()
+
     # Set up signal handler for Ctrl+C
     signal.signal(signal.SIGINT, interrupt_handler.handle_interrupt)
-    
+
     try:
         # Verify project structure
         if not PROJECT_ROOT.exists():
             LOGGER.error(f"Project root does not exist: {PROJECT_ROOT}")
             sys.exit(1)
-        
+
         # Verify scripts exist (as modules)
         webcrawler_path = PROJECT_ROOT / "scripts" / "ingestion" / "webcrawler.py"
         webscraper_path = PROJECT_ROOT / "scripts" / "ingestion" / "webscraper.py"
-        
+
         if not webcrawler_path.exists():
             LOGGER.error(f"Web crawler script not found: {webcrawler_path}")
             LOGGER.error("Please ensure the scripts/ingestion/webcrawler.py file exists")
             sys.exit(1)
-        
+
         if not webscraper_path.exists():
             LOGGER.error(f"Web scraper script not found: {webscraper_path}")
             LOGGER.error("Please ensure the scripts/ingestion/webscraper.py file exists")
             sys.exit(1)
-        
+
         # Run the pipeline
-        exit_code = run_crawl_scrape_pipeline()
+        exit_code = run_crawl_scrape_pipeline(args.mode)
         sys.exit(exit_code)
-    
+
     except KeyboardInterrupt:
         # This catches the second Ctrl+C from signal handler
         LOGGER.warning("\n\n" + "="*80)
         LOGGER.warning("PIPELINE INTERRUPTED BY USER")
         LOGGER.warning("="*80)
         sys.exit(1)
-    
+
     except Exception as e:
         LOGGER.exception(f"\n\nPIPELINE FAILED WITH UNEXPECTED ERROR: {e}")
         sys.exit(1)
