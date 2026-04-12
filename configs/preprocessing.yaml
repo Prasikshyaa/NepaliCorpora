@@ -19,7 +19,14 @@ normalize_unicode: true
 strip_whitespace: true
 
 # -----------------------------
+# Language filtering
+# -----------------------------
+min_devanagari_ratio: 0.3    # minimum ratio of Devanagari characters
+min_language_confidence: 0.5 # minimum confidence for language detection
+
+# -----------------------------
 # Segmentation rules
 # -----------------------------
 sentence_split: true
 paragraph_split: true
+min_paragraph_length: 50  # minimum characters per paragraph
