@@ -2,7 +2,7 @@
 
 <sub>Author: Prasikshya Karki</sub><br>
 <sub>GitHub: https://github.com/Prasikshyaa</sub><br>
-<sub>LinkedIn: https://www.linkedin.com/in/prasikshya-karki-7882863a4/</sub><br>
+<sub>LinkedIn: https://www.linkedin.com/in/prasikshyakarki/</sub><br>
 <sub>Version: 2.0.0 &nbsp;|&nbsp; Updated: April 12, 2026 &nbsp;|&nbsp; Python: 3.8+ &nbsp;|&nbsp; Status: Production-Ready</sub>
 ---
 
