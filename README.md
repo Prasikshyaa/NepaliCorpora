@@ -1,9 +1,9 @@
 # Nepali Corpus Project
 
-**Author**: Prasikshya Karki  
-**GitHub**: https://github.com/Prasikshyaa  
-**LinkedIn**: https://www.linkedin.com/in/prasikshya-karki-7882863a4/  
-**Version**: 2.0.0 | **Updated**: April 12, 2026 | **Python**: 3.8+ | **Status**: Production-Ready
+<sub>Author: Prasikshya Karki</sub><br>
+<sub>GitHub: https://github.com/Prasikshyaa</sub><br>
+<sub>LinkedIn: https://www.linkedin.com/in/prasikshya-karki-7882863a4/</sub><br>
+<sub>Version: 2.0.0 &nbsp;|&nbsp; Updated: April 12, 2026 &nbsp;|&nbsp; Python: 3.8+ &nbsp;|&nbsp; Status: Production-Ready</sub>
 ---
 
 ## Table of Contents
