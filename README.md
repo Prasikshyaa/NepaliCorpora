@@ -484,11 +484,14 @@ All changes require a pull request review. Automated tests must pass and documen
 
 ## License & Contact
 
-Developed for academic and research purposes in Nepali natural language processing. Please cite appropriately when using the collected datasets.
+Developed for academic and research purposes in Nepali natural language processing.
+Please cite appropriately when using the collected datasets.
 
-**Repository**: https://github.com/Prasikshyaa/NepaliCorpora
-
-**Contact**: prasikshyakarki@gmail.com — for technical issues, feature requests, or collaboration.
+| | |
+|---|---|
+| **Repository** | [Prasikshyaa/NepaliCorpora](https://github.com/Prasikshyaa/NepaliCorpora) |
+| **Contact** | [prasikshyakarki@gmail.com](mailto:prasikshyakarki@gmail.com) |
+| **Issues** | [GitHub Issues](https://github.com/Prasikshyaa/NepaliCorpora/issues) |
 
 ---
 
